@@ -46,10 +46,8 @@ Type a word — get back which documents have it and how many times, in millisec
 
 ## Roadmap
 
-- [x] Day 1 — Inverted index (C)
-- [ ] Day 2 — ANN engine / KD-Tree (C)
-- [ ] Day 3 — Python wrapper (ctypes)
-- [ ] Day 4 — Ranking logic
-- [ ] Day 5 — FastAPI backend
-- [ ] Day 6 — JS Frontend
-- [ ] Day 7 — AWS Deploy
+- [x] Phase 1 — Core engine in C (Inverted Index + ANN)
+- [ ] Phase 2 — Python wrapper + Ranking logic
+- [ ] Phase 3 — FastAPI backend
+- [ ] Phase 4 — JS Frontend + Live Demo
+- [ ] Phase 5 — AWS Deploy + Benchmarks
