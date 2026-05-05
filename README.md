@@ -1,6 +1,6 @@
-# QueryEngine
+# Lurox
 
-A custom search engine built from scratch in C — no libraries, no shortcuts.
+A high-performance search engine built from scratch in C — no libraries, no shortcuts.
 
 ## What was built today (Day 1)
 
