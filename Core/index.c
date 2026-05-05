@@ -43,6 +43,16 @@ void init_index(InvertedIndex *idx) {
     memset(idx->table, -1, sizeof(idx->table));
 }
 
+InvertedIndex *create_index(void) {
+    InvertedIndex *idx = malloc(sizeof(InvertedIndex));
+    init_index(idx);
+    return idx;
+}
+
+void free_index(InvertedIndex *idx) {
+    free(idx);
+}
+
 void add_term(InvertedIndex *idx, const char *raw_term, int doc_id) {
     char term[MAX_WORD_LEN];
     strncpy(term, raw_term, MAX_WORD_LEN - 1);
@@ -83,7 +93,7 @@ void add_term(InvertedIndex *idx, const char *raw_term, int doc_id) {
     idx->table[slot]                      = e;
 }
 
-void search(InvertedIndex *idx, const char *raw_term) {
+void search_term(InvertedIndex *idx, const char *raw_term) {
     char term[MAX_WORD_LEN];
     strncpy(term, raw_term, MAX_WORD_LEN - 1);
     term[MAX_WORD_LEN - 1] = '\0';
@@ -124,8 +134,7 @@ void print_index(InvertedIndex *idx) {
 }
 
 int main(void) {
-    InvertedIndex *idx = malloc(sizeof(InvertedIndex));
-    init_index(idx);
+    InvertedIndex *idx = create_index();
 
     add_term(idx, "search", 1);
     add_term(idx, "engine", 1);
@@ -136,11 +145,11 @@ int main(void) {
     add_term(idx, "search", 3);
 
     print_index(idx);
-    search(idx, "search");
-    search(idx, "fast");
-    search(idx, "missing");
+    search_term(idx, "search");
+    search_term(idx, "fast");
+    search_term(idx, "missing");
 
     fflush(stdout);
-    free(idx);
+    free_index(idx);
     return 0;
 }
