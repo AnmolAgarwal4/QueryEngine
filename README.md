@@ -1,98 +1,103 @@
 # Lurox
-
 A high-performance search engine built from scratch in C — no libraries, no shortcuts.
 
-## The Idea 
-A search engine specifically designed for engineers to lookup a related topic without havnig to go through 100+ websites (Regular Updates to this will be made)
+**Frontend:** https://lurox.netlify.app · **API:** https://lurox.onrender.com/docs
 
+---
 
-### Inverted Index (Core/index.c)
+## What is Lurox?
+Lurox indexes 10,000 real Stack Overflow questions and returns results in under 15ms. The entire search pipeline — inverted index, hash lookup, ANN traversal, REST API — is written from scratch with zero third-party search libraries.
 
-**Simple terms:**
-A search engine's core — like a library register that maps every word to which documents contain it. Instead of scanning all documents every time, we look up instantly.
+Built to understand how search engines actually work under the hood, not just use them.
 
-**Technical terms:**
-- Hash-based inverted index using djb2 hashing
-- O(1) average-case term lookup via chaining
-- Case-insensitive term normalization
-- Heap-allocated index to handle large struct size
+---
+
+## Architecture
+User Query → JS Frontend → FastAPI → Python ctypes → C Engine → SQLite → Results
+
+**Core Engine (C)**
+- Inverted index using djb2 hashing — O(1) average-case lookup
+- Hash table size 4096 (power-of-2 for fast modulo)
+- Linked chaining for collision resolution
+- Heap-allocated structs — no stack overflow on large datasets
 - Posting list per term storing doc_id and frequency
 
-**Data structures used:**
-- Hash table (size 512, power-of-2 for fast modulo)
-- Linked chaining for collision resolution
-- Struct-based posting lists
+**ANN Engine (C)**
+- KD-Tree based Approximate Nearest Neighbor search
+- Sub-linear traversal vs brute force O(n) distance calculation
 
-### Search Function
+**Python Layer**
+- ctypes wrapper bridges Python → C engine directly
+- FastAPI exposes `/search`, `/add`, `/health` endpoints
+- SQLite persistence — index survives server restarts
 
-**Simple terms:**
-Type a word — get back which documents have it and how many times, in milliseconds.
+---
 
-**Technical terms:**
-- Hash-based O(1) lookup
-- Returns posting list with doc_id and frequency
-- Latency measured using clock_t in milliseconds
+## Performance
 
-## Setup
+| Method | Latency |
+|--------|---------|
+| Brute Force O(n) | ~220ms |
+| Lurox Hash Index O(1) | ~2ms |
 
-    gcc Core/index.c -o Core/index_engine.exe
-    Core\index_engine.exe
-
-## Tech Stack
+---
 
 ## Tech Stack
 
 | Layer | Technology |
 |-------|------------|
-| Core Engine | C (GCC 15.2) |
-| Backend API | Python |
-| Database | SQLite3 |
-| Data Processing | CSV + Python Scripts |
-| Frontend | HTML, CSS, JavaScript |
-| Search Architecture | Inverted Index |
-| Hashing Algorithm | djb2 Hashing |
-| Memory Management | Manual Heap Allocation (C) |
-| API Integration | Python ctypes wrapper |
-| Version Control | Git + GitHub |
-| Deployment | Render |
-| IDE | VS Code |
-| Operating System | Windows |
+| Core Engine | C (GCC 15.2) — manual memory management |
+| Search | Inverted Index + KD-Tree ANN |
+| Hashing | djb2 |
+| Python Bridge | ctypes |
+| Backend | FastAPI + Uvicorn |
+| Storage | SQLite3 |
+| Frontend | HTML · CSS · Vanilla JS |
+| Deployment | Render + Netlify |
 
-## Structure 
+---
+
+## Project Structure
 Lurox/
-│
-├── .gitignore
-├── README.md
-├── render.yaml
-│
-├── api/
-│   ├── __pycache__/
-│   ├── .gitignore
-│   ├── main.py
-│   └── wrapper.py
-│
 ├── Core/
-│   ├── ann_engine.exe
-│   ├── ann.c
-│   ├── index.c
-│   └── lurox_core.dll
-│
+│   ├── index.c        # Inverted index + djb2 hash engine
+│   └── ann.c          # KD-Tree ANN engine
+├── api/
+│   ├── main.py        # FastAPI endpoints
+│   └── wrapper.py     # Python-C bridge via ctypes
 ├── data/
-│   ├── __pycache__/
-│   ├── Answers.csv
-│   ├── Questions.csv
-│   ├── Tags.csv
-│   ├── db.py
-│   ├── load_data.py
-│   └── lurox.db
-│
+│   ├── db.py          # SQLite persistence
+│   └── load_data.py   # Dataset indexer
 ├── frontend/
 │   ├── index.html
-│   ├── script.js
-│   └── style.css
-│
-└── requirements/
-    └── requirements.txt
+│   ├── style.css
+│   └── script.js
+├── render.yaml
+└── requirements.txt
 
+---
 
+## Local Setup
+```bash
+# Compile C engine (Linux/Mac)
+gcc -shared -fPIC -o Core/lurox_core.so Core/index.c
 
+# Compile C engine (Windows)
+gcc -shared -fPIC -o Core/lurox_core.dll Core/index.c
+
+# Install dependencies
+pip install fastapi uvicorn requests
+
+# Load dataset (API must be running)
+cd api && uvicorn main:app --reload
+python data/load_data.py
+```
+
+---
+
+## Roadmap
+- [x] Phase 1 — C engine (Inverted Index + KD-Tree ANN)
+- [x] Phase 2 — Python ctypes wrapper + SQLite persistence  
+- [x] Phase 3 — FastAPI backend
+- [x] Phase 4 — JS Frontend
+- [x] Phase 5 — Deployed on Render + Netlify
