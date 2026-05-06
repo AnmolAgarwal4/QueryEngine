@@ -1,4 +1,4 @@
-const API = 'http://127.0.0.1:8000';
+const API  = 'https://lurox.onrender.com';
 
 document.getElementById('query').addEventListener('keydown', e => {
     if (e.key === 'Enter') doSearch();
