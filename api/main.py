@@ -44,12 +44,35 @@ def add_term(req: AddRequest):
 
 @app.post("/search")
 def search_term(req: SearchRequest):
-    docs, ms = search(idx, req.term)
+    words = req.term.strip().lower().split()
+
+    if len(words) == 1:
+        docs, ms = search(idx, words[0])
+    else:
+        results = []
+        for word in words:
+            docs, ms = search(idx, word)
+            results.append({d["doc_id"]: d for d in docs})
+
+        common_ids = set(results[0].keys())
+        for r in results[1:]:
+            common_ids &= set(r.keys())
+
+        if common_ids:
+            docs = [results[0][doc_id] for doc_id in common_ids]
+        else:
+            merged = {}
+            for r in results:
+                merged.update(r)
+            docs = list(merged.values())
+
     if docs:
+        docs = sorted(docs, key=lambda x: x["freq"], reverse=True)
         doc_ids = [d["doc_id"] for d in docs]
         titles = get_titles(doc_ids)
         for d in docs:
             d["title"] = titles.get(d["doc_id"], "Unknown")
+
     return {
         "term": req.term,
         "results": docs,
