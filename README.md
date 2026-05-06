@@ -2,7 +2,9 @@
 
 A high-performance search engine built from scratch in C — no libraries, no shortcuts.
 
-## What was built today (Day 1)
+## The Idea 
+A search engine specifically designed for engineers to lookup a related topic without havnig to go through 100+ websites (Regular Updates to this will be made)
+
 
 ### Inverted Index (Core/index.c)
 
@@ -38,16 +40,59 @@ Type a word — get back which documents have it and how many times, in millisec
 
 ## Tech Stack
 
+## Tech Stack
+
 | Layer | Technology |
-|-------|-----------|
-| Core engine | C (GCC 15.2) |
-| Version control | Git + GitHub |
+|-------|------------|
+| Core Engine | C (GCC 15.2) |
+| Backend API | Python |
+| Database | SQLite3 |
+| Data Processing | CSV + Python Scripts |
+| Frontend | HTML, CSS, JavaScript |
+| Search Architecture | Inverted Index |
+| Hashing Algorithm | djb2 Hashing |
+| Memory Management | Manual Heap Allocation (C) |
+| API Integration | Python ctypes wrapper |
+| Version Control | Git + GitHub |
+| Deployment | Render |
 | IDE | VS Code |
+| Operating System | Windows |
 
-## Roadmap
+## Structure 
+Lurox/
+│
+├── .gitignore
+├── README.md
+├── render.yaml
+│
+├── api/
+│   ├── __pycache__/
+│   ├── .gitignore
+│   ├── main.py
+│   └── wrapper.py
+│
+├── Core/
+│   ├── ann_engine.exe
+│   ├── ann.c
+│   ├── index.c
+│   └── lurox_core.dll
+│
+├── data/
+│   ├── __pycache__/
+│   ├── Answers.csv
+│   ├── Questions.csv
+│   ├── Tags.csv
+│   ├── db.py
+│   ├── load_data.py
+│   └── lurox.db
+│
+├── frontend/
+│   ├── index.html
+│   ├── script.js
+│   └── style.css
+│
+└── requirements/
+    └── requirements.txt
 
-- [x] Phase 1 — Core engine in C (Inverted Index + ANN)
-- [ ] Phase 2 — Python wrapper + Ranking logic
-- [ ] Phase 3 — FastAPI backend
-- [ ] Phase 4 — JS Frontend + Live Demo
-- [ ] Phase 5 — AWS Deploy + Benchmarks
+
+
