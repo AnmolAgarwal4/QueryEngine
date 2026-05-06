@@ -3,8 +3,8 @@ import requests
 import sys
 import os
 
-sys.path.append(os.path.join(os.path.dirname(__file__), '..', 'data'))
-from db import init_db, save_posting, is_empty
+sys.path.append(os.path.join(os.path.dirname(__file__)))
+from db import init_db, save_posting, save_question, is_empty
 
 API = "http://127.0.0.1:8000"
 
@@ -27,6 +27,8 @@ def load_questions(filepath, limit=5000):
                 
                 if not title:
                     continue
+
+                save_question(doc_id, title)
                 
                 words = title.lower().split()
                 for word in words:
@@ -47,4 +49,4 @@ def load_questions(filepath, limit=5000):
     print(f"Done. {count} questions indexed and saved to DB.")
 
 if __name__ == "__main__":
-    load_questions("data/Questions.csv", limit=5000)
+    load_questions("data/Questions.csv", limit=10000)

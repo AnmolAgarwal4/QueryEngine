@@ -14,6 +14,22 @@ def init_db():
             PRIMARY KEY (term, doc_id)
         )
     ''')
+    c.execute('''
+        CREATE TABLE IF NOT EXISTS questions (
+            doc_id  INTEGER PRIMARY KEY,
+            title   TEXT
+        )
+    ''')
+    conn.commit()
+    conn.close()
+
+def save_question(doc_id, title):
+    conn = sqlite3.connect(DB_PATH)
+    c = conn.cursor()
+    c.execute('''
+        INSERT OR IGNORE INTO questions (doc_id, title)
+        VALUES (?, ?)
+    ''', (doc_id, title))
     conn.commit()
     conn.close()
 
@@ -35,6 +51,15 @@ def load_all():
     rows = c.fetchall()
     conn.close()
     return rows
+
+def get_titles(doc_ids):
+    conn = sqlite3.connect(DB_PATH)
+    c = conn.cursor()
+    placeholders = ','.join('?' * len(doc_ids))
+    c.execute(f'SELECT doc_id, title FROM questions WHERE doc_id IN ({placeholders})', doc_ids)
+    rows = c.fetchall()
+    conn.close()
+    return {row[0]: row[1] for row in rows}
 
 def is_empty():
     conn = sqlite3.connect(DB_PATH)

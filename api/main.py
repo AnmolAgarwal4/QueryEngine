@@ -6,7 +6,7 @@ import sys
 import os
 
 sys.path.append(os.path.join(os.path.dirname(__file__), '..', 'data'))
-from db import init_db, save_posting, load_all, is_empty
+from db import init_db, save_posting, load_all, is_empty, get_titles
 
 app = FastAPI()
 
@@ -45,6 +45,11 @@ def add_term(req: AddRequest):
 @app.post("/search")
 def search_term(req: SearchRequest):
     docs, ms = search(idx, req.term)
+    if docs:
+        doc_ids = [d["doc_id"] for d in docs]
+        titles = get_titles(doc_ids)
+        for d in docs:
+            d["title"] = titles.get(d["doc_id"], "Unknown")
     return {
         "term": req.term,
         "results": docs,

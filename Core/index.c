@@ -4,10 +4,10 @@
 #include <ctype.h>
 #include <time.h>
 
-#define MAX_TERMS    5000
+#define MAX_TERMS    10000
 #define MAX_DOCS     1000
 #define MAX_WORD_LEN 64
-#define HASH_SIZE    4096
+#define HASH_SIZE    8192
 
 typedef struct {
     int doc_id;

@@ -97,3 +97,14 @@ button:hover { background: #00cc66; }
 
 .error { color: #ff4444; margin-top: 1rem; font-size: 0.85rem; }
 .empty { color: #333;    margin-top: 1rem; font-size: 0.85rem; }
+
+.result-title {
+    color: #fff;
+    font-size: 0.9rem;
+    margin-bottom: 0.4rem;
+}
+
+.result-meta {
+    display: flex;
+    justify-content: space-between;
+}

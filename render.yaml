@@ -1,0 +1,12 @@
+services:
+  - type: web
+    name: lurox
+    runtime: python
+    buildCommand: |
+      apt-get install -y gcc
+      gcc -shared -fPIC -o Core/lurox_core.so Core/index.c
+      pip install -r requirements.txt
+    startCommand: cd api && uvicorn main:app --host 0.0.0.0 --port $PORT
+    envVars:
+      - key: PORT
+        value: 8000

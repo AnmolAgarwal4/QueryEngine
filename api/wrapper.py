@@ -1,7 +1,9 @@
 import ctypes
 import os
+import platform
 
-lib_path = os.path.join(os.path.dirname(__file__), '..', 'Core', 'lurox_core.dll')
+ext = '.dll' if platform.system() == 'Windows' else '.so'
+lib_path = os.path.join(os.path.dirname(__file__), '..', 'Core', f'lurox_core{ext}')
 lib = ctypes.CDLL(lib_path)
 
 MAX_DOCS = 1000

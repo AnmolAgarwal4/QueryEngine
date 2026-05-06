@@ -28,8 +28,11 @@ async function doSearch() {
 
         const cards = data.results.map(r => `
             <div class="result-card">
-                <span class="doc-id">doc_id: ${r.doc_id}</span>
-                <span class="freq">freq: ${r.freq}</span>
+                <div class="result-title">${r.title || 'Unknown'}</div>
+                <div class="result-meta">
+                    <span class="doc-id">doc #${r.doc_id}</span>
+                    <span class="freq">freq: ${r.freq}</span>
+                </div>
             </div>
         `).join('');
 
