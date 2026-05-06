@@ -4,10 +4,10 @@
 #include <ctype.h>
 #include <time.h>
 
-#define MAX_TERMS    512
+#define MAX_TERMS    5000
 #define MAX_DOCS     1000
 #define MAX_WORD_LEN 64
-#define HASH_SIZE    512
+#define HASH_SIZE    4096
 
 typedef struct {
     int doc_id;
@@ -26,6 +26,13 @@ typedef struct {
     int        table[HASH_SIZE];
     int        term_count;
 } InvertedIndex;
+
+typedef struct {
+    int    doc_ids[MAX_DOCS];
+    int    frequencies[MAX_DOCS];
+    int    count;
+    double latency_ms;
+} SearchResult;
 
 static unsigned int hash_term(const char *term) {
     unsigned int h = 5381;
@@ -93,44 +100,35 @@ void add_term(InvertedIndex *idx, const char *raw_term, int doc_id) {
     idx->table[slot]                      = e;
 }
 
-void search_term(InvertedIndex *idx, const char *raw_term) {
+SearchResult search_term(InvertedIndex *idx, const char *raw_term) {
+    SearchResult result;
+    result.count      = 0;
+    result.latency_ms = 0.0;
+
     char term[MAX_WORD_LEN];
     strncpy(term, raw_term, MAX_WORD_LEN - 1);
     term[MAX_WORD_LEN - 1] = '\0';
     to_lower(term);
 
-    clock_t start = clock();
-    unsigned int slot = hash_term(term);
-    int i = idx->table[slot];
+    clock_t start        = clock();
+    unsigned int slot    = hash_term(term);
+    int i                = idx->table[slot];
 
     while (i != -1) {
         if (strcmp(idx->entries[i].term, term) == 0) {
-            double ms = (double)(clock() - start) / CLOCKS_PER_SEC * 1000.0;
-            printf("\nResults for \"%s\":\n", term);
             for (int j = 0; j < idx->entries[i].posting_count; j++) {
-                printf("  doc_id=%-4d  freq=%d\n",
-                    idx->entries[i].postings[j].doc_id,
-                    idx->entries[i].postings[j].frequency);
+                result.doc_ids[j]     = idx->entries[i].postings[j].doc_id;
+                result.frequencies[j] = idx->entries[i].postings[j].frequency;
+                result.count++;
             }
-            printf("Search time: %.4f ms\n", ms);
-            return;
+            result.latency_ms = (double)(clock() - start) / CLOCKS_PER_SEC * 1000.0;
+            return result;
         }
         i = idx->entries[i].next;
     }
-    printf("Term \"%s\" not found.\n", term);
-}
 
-void print_index(InvertedIndex *idx) {
-    printf("\n=== Inverted Index (%d terms) ===\n", idx->term_count);
-    for (int i = 0; i < idx->term_count; i++) {
-        printf("%-15s -> ", idx->entries[i].term);
-        for (int j = 0; j < idx->entries[i].posting_count; j++) {
-            printf("[doc=%d f=%d] ",
-                idx->entries[i].postings[j].doc_id,
-                idx->entries[i].postings[j].frequency);
-        }
-        printf("\n");
-    }
+    result.latency_ms = (double)(clock() - start) / CLOCKS_PER_SEC * 1000.0;
+    return result;
 }
 
 int main(void) {
@@ -144,10 +142,12 @@ int main(void) {
     add_term(idx, "fast",   3);
     add_term(idx, "search", 3);
 
-    print_index(idx);
-    search_term(idx, "search");
-    search_term(idx, "fast");
-    search_term(idx, "missing");
+    SearchResult r = search_term(idx, "search");
+    printf("Found %d results\n", r.count);
+    for (int i = 0; i < r.count; i++) {
+        printf("doc_id=%d freq=%d\n", r.doc_ids[i], r.frequencies[i]);
+    }
+    printf("Latency: %.4f ms\n", r.latency_ms);
 
     fflush(stdout);
     free_index(idx);
