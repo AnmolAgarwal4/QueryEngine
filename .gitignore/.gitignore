@@ -3,3 +3,6 @@ __pycache__/
 *.dll
 data/*.csv
 data/*.db
+data/__pycache__/
+data/lurox.db
+*.pyc
