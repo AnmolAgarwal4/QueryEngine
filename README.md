@@ -35,10 +35,14 @@ User Query → JS Frontend → FastAPI → Python ctypes → C Engine → SQLite
 
 ## Performance
 
-| Method | Latency |
-|--------|---------|
-| Brute Force O(n) | ~220ms |
-| Lurox Hash Index O(1) | ~2ms |
+![Lurox Speedup](benchmarks/lurox_speedup.png)
+
+| Method | Latency | Complexity |
+|--------|---------|------------|
+| Brute Force | ~220ms | O(n) |
+| Lurox Hash Index | ~2ms | O(1) avg |
+
+Measured on 10,000 Stack Overflow questions.
 
 ---
 
