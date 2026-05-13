@@ -1,0 +1,68 @@
+{
+  "0.0": {
+    "overlap_with_bm25": 0.233,
+    "overlap_with_semantic": 1.0,
+    "diversity_score": 0.383,
+    "avg_latency_ms": 16.36
+  },
+  "0.1": {
+    "overlap_with_bm25": 0.333,
+    "overlap_with_semantic": 0.842,
+    "diversity_score": 0.412,
+    "avg_latency_ms": 14.94
+  },
+  "0.2": {
+    "overlap_with_bm25": 0.425,
+    "overlap_with_semantic": 0.7,
+    "diversity_score": 0.438,
+    "avg_latency_ms": 15.18
+  },
+  "0.3": {
+    "overlap_with_bm25": 0.525,
+    "overlap_with_semantic": 0.608,
+    "diversity_score": 0.433,
+    "avg_latency_ms": 15.56
+  },
+  "0.4": {
+    "overlap_with_bm25": 0.608,
+    "overlap_with_semantic": 0.525,
+    "diversity_score": 0.433,
+    "avg_latency_ms": 14.89
+  },
+  "0.5": {
+    "overlap_with_bm25": 0.667,
+    "overlap_with_semantic": 0.492,
+    "diversity_score": 0.421,
+    "avg_latency_ms": 14.46
+  },
+  "0.6": {
+    "overlap_with_bm25": 0.717,
+    "overlap_with_semantic": 0.433,
+    "diversity_score": 0.425,
+    "avg_latency_ms": 15.56
+  },
+  "0.7": {
+    "overlap_with_bm25": 0.783,
+    "overlap_with_semantic": 0.383,
+    "diversity_score": 0.417,
+    "avg_latency_ms": 15.63
+  },
+  "0.8": {
+    "overlap_with_bm25": 0.842,
+    "overlap_with_semantic": 0.342,
+    "diversity_score": 0.408,
+    "avg_latency_ms": 15.47
+  },
+  "0.9": {
+    "overlap_with_bm25": 0.925,
+    "overlap_with_semantic": 0.283,
+    "diversity_score": 0.396,
+    "avg_latency_ms": 15.59
+  },
+  "1.0": {
+    "overlap_with_bm25": 1.0,
+    "overlap_with_semantic": 0.233,
+    "diversity_score": 0.383,
+    "avg_latency_ms": 14.09
+  }
+}
