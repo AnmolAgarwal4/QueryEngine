@@ -1,7 +1,7 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
-from wrapper import create_index, add, search, free
+from wrapper import create_index, add, search, free, finalize
 import sys
 import os
 
@@ -26,6 +26,7 @@ if not is_empty():
     for term, doc_id, freq in rows:
         add(idx, term, doc_id)
     print(f"Loaded {len(rows)} postings from DB.")
+    finalize(idx)
 else:
     print("Database empty — load data using load_data.py")
 
@@ -40,6 +41,7 @@ class SearchRequest(BaseModel):
 def add_term(req: AddRequest):
     add(idx, req.term, req.doc_id)
     save_posting(req.term, req.doc_id)
+    finalize(idx)
     return {"status": "added", "term": req.term, "doc_id": req.doc_id}
 
 @app.post("/search")
@@ -67,7 +69,7 @@ def search_term(req: SearchRequest):
             docs = list(merged.values())
 
     if docs:
-        docs = sorted(docs, key=lambda x: x["freq"], reverse=True)
+        docs = sorted(docs, key=lambda x: x["score"], reverse=True)
         doc_ids = [d["doc_id"] for d in docs]
         titles = get_titles(doc_ids)
         for d in docs:
