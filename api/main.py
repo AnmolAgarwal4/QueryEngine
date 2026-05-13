@@ -82,6 +82,24 @@ def search_term(req: SearchRequest):
         "latency_ms": ms
     }
 
+@app.post("/semantic_search")
+def semantic_search_endpoint(req: SearchRequest):
+    from db import get_titles
+    docs, ms = semantic_search(req.term, top_k=10)
+    doc_ids = [d["doc_id"] for d in docs]
+    titles = get_titles(doc_ids)
+    for d in docs:
+        d["title"] = titles.get(d["doc_id"], "Unknown")
+    return {
+        "term": req.term,
+        "results": docs,
+        "count": len(docs),
+        "latency_ms": ms,
+        "method": "semantic"
+    }
+
 @app.get("/health")
 def health():
     return {"status": "Lurox engine running"}
+
+from semantic import semantic_search
