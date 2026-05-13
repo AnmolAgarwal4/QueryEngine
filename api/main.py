@@ -2,6 +2,8 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 from wrapper import create_index, add, search, free, finalize
+from semantic import semantic_search, load
+from hybrid import hybrid_search
 import sys
 import os
 
@@ -29,6 +31,10 @@ if not is_empty():
     finalize(idx)
 else:
     print("Database empty — load data using load_data.py")
+
+print("Pre-loading semantic search model...")
+load()
+print("Model ready.")
 
 class AddRequest(BaseModel):
     term: str
@@ -84,7 +90,6 @@ def search_term(req: SearchRequest):
 
 @app.post("/semantic_search")
 def semantic_search_endpoint(req: SearchRequest):
-    from db import get_titles
     docs, ms = semantic_search(req.term, top_k=10)
     doc_ids = [d["doc_id"] for d in docs]
     titles = get_titles(doc_ids)
@@ -98,8 +103,23 @@ def semantic_search_endpoint(req: SearchRequest):
         "method": "semantic"
     }
 
+@app.post("/hybrid_search")
+def hybrid_search_endpoint(req: SearchRequest):
+    alpha = 0.5
+    docs, ms = hybrid_search(idx, req.term, alpha=alpha, top_k=10)
+    doc_ids = [d["doc_id"] for d in docs]
+    titles = get_titles(doc_ids)
+    for d in docs:
+        d["title"] = titles.get(d["doc_id"], "Unknown")
+    return {
+        "term": req.term,
+        "results": docs,
+        "count": len(docs),
+        "latency_ms": ms,
+        "method": "hybrid",
+        "alpha": alpha
+    }
+
 @app.get("/health")
 def health():
     return {"status": "Lurox engine running"}
-
-from semantic import semantic_search
