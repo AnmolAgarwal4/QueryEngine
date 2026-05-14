@@ -1,0 +1,22 @@
+{
+  "BM25": {
+    "avg_latency": 0.17,
+    "p99_latency": 0.43,
+    "unique_results": 10.0
+  },
+  "Semantic": {
+    "avg_latency": 10.01,
+    "p99_latency": 23.74,
+    "unique_results": 10.0
+  },
+  "Hybrid": {
+    "avg_latency": 14.63,
+    "p99_latency": 16.01,
+    "unique_results": 10.0
+  },
+  "RAG": {
+    "avg_latency": 884.22,
+    "p99_latency": 1798.51,
+    "avg_answer_words": 81.6
+  }
+}
