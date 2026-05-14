@@ -142,6 +142,7 @@ Lurox/
 │   ├── style.css
 │   └── script.js
 └── render.yaml
+```
 
 ---
 
