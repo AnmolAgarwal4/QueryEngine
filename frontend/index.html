@@ -3,23 +3,79 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Lurox</title>
+  <title>Lurox v2.0</title>
   <link rel="stylesheet" href="style.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
 </head>
 <body>
 
-  <h1>LUROX</h1>
-  <p class="subtitle">For a Coder By a Coder</p>
+  <canvas id="matrix"></canvas>
 
-  <div class="search-box">
-    <input id="query" type="text" placeholder="search..." autofocus />
-    <button onclick="doSearch()">Search</button>
+  <div class="container">
+    <header class="head">
+      <div class="brand">
+        <h1 class="name">LUROX</h1>
+        <span class="ver">v2.0</span>
+      </div>
+      <p class="tag">Hybrid retrieval-augmented search over 10K Stack Overflow questions. Sparse, dense, hybrid, and grounded-LLM modes in a single pipeline.</p>
+      <div class="meta">
+        <span><strong>10,087</strong> docs</span>
+        <span><strong>384-dim</strong> embeddings</span>
+        <span><strong>α=0.3</strong> hybrid weight</span>
+        <span><strong>BM25 · dense · RAG</strong></span>
+      </div>
+    </header>
+
+    <section class="body">
+      <div class="modes">
+        <button class="mode active" data-mode="bm25">
+          <div class="mode-label">BM25</div>
+          <div class="mode-tech">djb2 · O(1) avg</div>
+        </button>
+        <button class="mode" data-mode="semantic">
+          <div class="mode-label">Semantic</div>
+          <div class="mode-tech">MiniLM-L6 · cosine</div>
+        </button>
+        <button class="mode" data-mode="hybrid">
+          <div class="mode-label">Hybrid</div>
+          <div class="mode-tech">BM25 + dense</div>
+        </button>
+        <button class="mode" data-mode="rag">
+          <div class="mode-label">RAG</div>
+          <div class="mode-tech">Llama 3.3 · grounded</div>
+        </button>
+      </div>
+
+      <div class="search">
+        <input id="query" type="text" placeholder="Search..." autofocus />
+        <button id="searchBtn" onclick="doSearch()">SEARCH</button>
+      </div>
+
+      <div class="trace" id="trace" style="display:none;">
+        <div class="trace-row"><span>Method</span><strong id="t-method">—</strong></div>
+        <div class="trace-row"><span>Pipeline</span><strong id="t-pipeline">—</strong></div>
+        <div class="trace-row"><span>Latency</span><span class="ms" id="t-latency">—</span></div>
+        <div class="trace-row"><span>Complexity</span><strong id="t-complexity">—</strong></div>
+      </div>
+
+      <div class="results-head" id="results-head" style="display:none;">
+        <span id="results-label">Top results</span>
+        <span id="score-label">Score</span>
+      </div>
+
+      <div id="results"></div>
+    </section>
+
+    <footer class="foot">
+      <div class="stat"><div class="stat-label">BM25</div><div class="stat-val">0.17<span class="stat-unit">ms</span></div><div class="stat-cap">p50</div></div>
+      <div class="stat"><div class="stat-label">Semantic</div><div class="stat-val dim">10.0<span class="stat-unit">ms</span></div><div class="stat-cap">p50</div></div>
+      <div class="stat"><div class="stat-label">Hybrid</div><div class="stat-val dim">14.6<span class="stat-unit">ms</span></div><div class="stat-cap">p50</div></div>
+      <div class="stat"><div class="stat-label">RAG</div><div class="stat-val dim">884<span class="stat-unit">ms</span></div><div class="stat-cap">incl LLM</div></div>
+    </footer>
   </div>
 
-  <div class="results" id="results"></div>
-
-  <canvas id="matrix"></canvas>
   <script src="script.js"></script>
-
 </body>
 </html>
