@@ -1,7 +1,6 @@
 const API = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1'
     ? 'http://localhost:8000'
-    : 'https://lurox.onrender.com';
-
+    : 'https://anmol325-lurox-backend.hf.space';
 let currentMode = 'bm25';
 
 const MODE_CONFIG = {
