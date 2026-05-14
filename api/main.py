@@ -6,6 +6,7 @@ from semantic import semantic_search, load
 from hybrid import hybrid_search
 import sys
 import os
+from rag import rag_answer
 
 sys.path.append(os.path.join(os.path.dirname(__file__), '..', 'data'))
 from db import init_db, save_posting, load_all, is_empty, get_titles
@@ -118,6 +119,17 @@ def hybrid_search_endpoint(req: SearchRequest):
         "latency_ms": ms,
         "method": "hybrid",
         "alpha": alpha
+    }
+
+@app.post("/rag")
+def rag_endpoint(req: SearchRequest):
+    result = rag_answer(idx, req.term, top_k=5, alpha=0.3)
+    return {
+        "query": req.term,
+        "answer": result["answer"],
+        "sources": result["sources"],
+        "latency_ms": result["latency_ms"],
+        "method": "rag"
     }
 
 @app.get("/health")
