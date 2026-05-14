@@ -111,6 +111,8 @@ Across 12 queries × 11 α values (132 searches), diversity peaks at α = 0.2–
 ---
 
 ## Project Structure
+
+```
 Lurox/
 ├── api/
 │   ├── main.py            # FastAPI endpoints
